@@ -1,0 +1,35 @@
+<?php
+
+$envDomain = 'https://api.g2a.com/v1'; // for production, domain will be different
+$g2aEmail = 'klemanndamian@gmail.com'; // customer email
+$clientId = 'geljgvFzQbMtQeKn'; // API Client ID
+$clientSecret = 'nSBWtsrleqWiEkSzLOyVrECIbqUWjbzi'; // customer Client secret
+
+$apiKey = hash('sha256', $clientId . $g2aEmail . $clientSecret);
+
+echo 'Authorization: ' . $clientId . ', ' . $apiKey . PHP_EOL;
+
+$productsApiUrl = 'https://' . $envDomain . '/v1/products';
+$curl = curl_init();
+curl_setopt_array($curl, array(
+    CURLOPT_URL => $productsApiUrl,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_TIMEOUT => 30,
+    CURLOPT_CUSTOMREQUEST => "GET",
+    CURLOPT_HTTPHEADER => array(
+        "Authorization: $clientId, $apiKey",
+        "Content-Type: application/json",
+    ),
+));
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}
